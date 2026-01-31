@@ -1,10 +1,11 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { Header } from "../components/Header";
 import { ReminderModal } from "../components/ReminderModal";
 import { Reminder } from "../types/Reminder";
 import { Ionicons } from "@expo/vector-icons";
+import { ReminderCard } from "../components/ReminderCard";
 
 export function Main() {
   const { currentTheme } = useTheme();
@@ -15,7 +16,7 @@ export function Main() {
     null,
   );
 
-  function handleSaveReminder(data: Omit<Reminder, "id">) {
+  function handleSaveReminder(data: Omit<Reminder, "id" | "enabled">) {
     if (selectedReminder) {
       setReminders((prev) =>
         prev.map((item) =>
@@ -23,10 +24,38 @@ export function Main() {
         ),
       );
     } else {
-      setReminders((prev) => [...prev, { id: String(Date.now()), ...data }]);
+      setReminders((prev) => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          ...data,
+          enabled: true,
+        },
+      ]);
     }
 
     setSelectedReminder(null);
+  }
+
+  function handleDeleteReminder(id: string, title: string) {
+    Alert.alert(
+      "Excluir lembrete",
+      `Deseja excluir o lembrete "${title}"?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => {
+            setReminders((prev) => prev.filter((item) => item.id !== id));
+          },
+        },
+      ],
+      { cancelable: true },
+    );
   }
 
   return (
@@ -39,14 +68,20 @@ export function Main() {
           alignSelf: "center",
           flexDirection: "row",
           alignItems: "center",
-          marginVertical: 16
+          marginVertical: 16,
         }}
       >
         <Ionicons name="add-circle" size={28} color={currentTheme.primary} />
       </TouchableOpacity>
 
       {reminders.length === 0 && (
-        <Text style={{ textAlign: "center", color: currentTheme.subtext, marginTop: 24 }}>
+        <Text
+          style={{
+            textAlign: "center",
+            color: currentTheme.subtext,
+            marginTop: 24,
+          }}
+        >
           Nenhuma notificação criada ainda
         </Text>
       )}
@@ -56,39 +91,21 @@ export function Main() {
         data={reminders}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
+          <ReminderCard
+            reminder={item}
             onPress={() => {
               setSelectedReminder(item);
               setModalVisible(true);
             }}
-            style={{
-              backgroundColor: currentTheme.card,
-              borderRadius: 12,
-              padding: 16,
-              marginBottom: 12
+            onToggle={() => {
+              setReminders((prev) =>
+                prev.map((r) =>
+                  r.id === item.id ? { ...r, enabled: !r.enabled } : r,
+                ),
+              );
             }}
-          >
-            <Text
-              style={{
-                color: currentTheme.text,
-                fontSize: 16,
-                fontWeight: "600",
-                textAlign: "left"
-              }}
-            >
-              {item.title}
-            </Text>
-
-            <Text
-              style={{
-                color: currentTheme.subtext,
-                marginTop: 4,
-                textAlign: "left"
-              }}
-            >
-              {item.description}
-            </Text>
-          </TouchableOpacity>
+            onDelete={() => handleDeleteReminder(item.id, item.title)}
+          />
         )}
       />
 

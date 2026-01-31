@@ -70,6 +70,7 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
       time,
       repeatType,
       interval: repeatType === "interval" ? Number(interval) : undefined,
+      enabled: true
     });
 
     onClose();

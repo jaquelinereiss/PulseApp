@@ -5,6 +5,7 @@ export type Reminder = {
     title: string;
     description: string;
     time: string;
-    repeatType: RepeatType;
     interval?: number;
+    repeatType: RepeatType;
+    enabled: boolean;
 }
