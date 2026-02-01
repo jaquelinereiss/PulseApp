@@ -73,9 +73,16 @@ export function ReminderCard({ reminder, onPress, onToggle, onDelete }: Props) {
               alignItems: "center",
             }}
           >
+            <View style={{ marginTop: 8}}> 
+              <Text style={{ color: currentTheme.primary, fontWeight: "500" }}>
+              Data: {new Date(reminder.date).toLocaleDateString()}
+            </Text>
+
             <Text style={{ color: currentTheme.primary, fontWeight: "500" }}>
               Horário: {reminder.time}
             </Text>
+            </View>
+            
 
             <View
               style={{

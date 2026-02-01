@@ -1,7 +1,15 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Platform,
+  Button,
+} from "react-native";
 import { useEffect, useState } from "react";
 import { Reminder, RepeatType } from "../types/Reminder";
 import { useTheme } from "../contexts/ThemeContext";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 type Props = {
   reminder: Reminder | null;
@@ -17,6 +25,16 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
   const [time, setTime] = useState("");
   const [repeatType, setRepeatType] = useState<RepeatType | null>(null);
   const [interval, setInterval] = useState("");
+
+  const [date, setDate] = useState<Date>(
+    reminder ? new Date(reminder.date) : new Date(),
+  );
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  function handleDateChange(event: any, selectedDate?: Date) {
+    setShowDatePicker(Platform.OS === "ios");
+    if (selectedDate) setDate(selectedDate);
+  }
 
   function formatTime(value: string) {
     const numeric = value.replace(/\D/g, "").slice(0, 4);
@@ -68,18 +86,26 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
       title,
       description,
       time,
+      date: date.toISOString(),
       repeatType,
       interval: repeatType === "interval" ? Number(interval) : undefined,
-      enabled: true
+      enabled: true,
     });
 
     onClose();
   }
 
   return (
-    <View style={{ backgroundColor: currentTheme.card, padding: 20, borderRadius: 16 }}>
-      
-      <Text style={{ color: currentTheme.text, fontSize: 18, marginBottom: 12 }}>
+    <View
+      style={{
+        backgroundColor: currentTheme.card,
+        padding: 20,
+        borderRadius: 16,
+      }}
+    >
+      <Text
+        style={{ color: currentTheme.text, fontSize: 18, marginBottom: 12 }}
+      >
         {reminder ? "Editar notificação" : "Nova notificação"}
       </Text>
 
@@ -92,7 +118,7 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
           borderBottomWidth: 0.5,
           borderBottomColor: currentTheme.border,
           color: currentTheme.text,
-          marginTop: 12
+          marginTop: 12,
         }}
       />
 
@@ -105,7 +131,7 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
           borderBottomWidth: 0.5,
           borderBottomColor: currentTheme.border,
           color: currentTheme.text,
-          marginTop: 12
+          marginTop: 12,
         }}
       />
 
@@ -120,16 +146,22 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
           borderBottomWidth: 0.5,
           borderBottomColor: currentTheme.border,
           color: currentTheme.text,
-          marginTop: 12
+          marginTop: 12,
         }}
       />
 
       <View>
-        <Text style={{ color: currentTheme.subtext, marginTop: 12, marginBottom: 12 }}>
+        <Text
+          style={{
+            color: currentTheme.subtext,
+            marginTop: 12,
+            marginBottom: 12,
+          }}
+        >
           Repetição *
         </Text>
 
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, }}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
           {[
             { label: "Não repetir", value: "once" },
             { label: "Diária", value: "daily" },
@@ -147,10 +179,15 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
                     ? currentTheme.primary
                     : currentTheme.card,
                 borderWidth: 1,
-                borderColor: currentTheme.border
+                borderColor: currentTheme.border,
               }}
             >
-              <Text style={{ color: repeatType === option.value ? "#fff" : currentTheme.text }}>
+              <Text
+                style={{
+                  color:
+                    repeatType === option.value ? "#fff" : currentTheme.text,
+                }}
+              >
                 {option.label}
               </Text>
             </TouchableOpacity>
@@ -170,8 +207,31 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
             borderBottomColor: currentTheme.border,
             color: currentTheme.text,
             marginTop: 12,
-            marginBottom: 8
           }}
+        />
+      )}
+
+      <TouchableOpacity
+        onPress={() => setShowDatePicker(true)}
+        style={{
+          borderBottomWidth: 0.5,
+          borderBottomColor: currentTheme.border,
+          paddingVertical: 12,
+          marginTop: 12,
+          marginBottom: 8,
+        }}
+      >
+        <Text style={{ color: currentTheme.text }}>
+          Data: {date.toLocaleDateString()}
+        </Text>
+      </TouchableOpacity>
+
+      {showDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="calendar"
+          onChange={handleDateChange}
         />
       )}
 
@@ -186,9 +246,7 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
           marginTop: 24
         }}
       >
-        <Text style={{ color: "#fff", fontWeight: "600" }}>
-            Salvar
-        </Text>
+        <Text style={{ color: "#fff", fontWeight: "600" }}>Salvar</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={onClose} style={{ marginTop: 12 }}>
