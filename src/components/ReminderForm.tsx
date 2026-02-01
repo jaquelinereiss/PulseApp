@@ -4,7 +4,6 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
-  Button,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { Reminder, RepeatType } from "../types/Reminder";
@@ -30,6 +29,9 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
     reminder ? new Date(reminder.date) : new Date(),
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
 
   function handleDateChange(event: any, selectedDate?: Date) {
     setShowDatePicker(Platform.OS === "ios");
@@ -64,12 +66,16 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
       setTime(reminder.time);
       setRepeatType(reminder.repeatType);
       setInterval(reminder.interval?.toString() ?? "");
+      setDate(new Date(reminder.date));
+      setTags(reminder.tags ?? []);
     } else {
       setTitle("");
       setDescription("");
       setTime("");
       setRepeatType(null);
       setInterval("");
+      setDate(new Date());
+      setTags([]);
     }
   }, [reminder]);
 
@@ -90,6 +96,7 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
       repeatType,
       interval: repeatType === "interval" ? Number(interval) : undefined,
       enabled: true,
+      tags,
     });
 
     onClose();
@@ -185,7 +192,7 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
               <Text
                 style={{
                   color:
-                    repeatType === option.value ? "#fff" : currentTheme.text,
+                    repeatType === option.value ? "#fff" : currentTheme.subtext,
                 }}
               >
                 {option.label}
@@ -218,10 +225,9 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
           borderBottomColor: currentTheme.border,
           paddingVertical: 12,
           marginTop: 12,
-          marginBottom: 8,
         }}
       >
-        <Text style={{ color: currentTheme.text }}>
+        <Text style={{ color: currentTheme.subtext }}>
           Data: {date.toLocaleDateString()}
         </Text>
       </TouchableOpacity>
@@ -235,6 +241,55 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
         />
       )}
 
+      <View>
+        <Text
+          style={{
+            color: currentTheme.subtext,
+            marginTop: 12,
+            marginBottom: 8,
+          }}
+        >
+          Tags
+        </Text>
+
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+          {tags.map((tag, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => setTags(tags.filter((t) => t !== tag))}
+              style={{
+                paddingVertical: 4,
+                paddingHorizontal: 8,
+                borderRadius: 12,
+                backgroundColor: currentTheme.primary,
+              }}
+            >
+              <Text style={{ color: "#fff" }}>{tag} x</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <TextInput
+          placeholder="Adicionar tag e apertar OK (opcional)"
+          placeholderTextColor={currentTheme.subtext}
+          value={tagInput}
+          onChangeText={setTagInput}
+          onSubmitEditing={() => {
+            if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+              setTags([...tags, tagInput.trim()]);
+            }
+            setTagInput("");
+          }}
+          style={{
+            borderBottomWidth: 0.5,
+            borderBottomColor: currentTheme.border,
+            color: currentTheme.text,
+            marginTop: 8,
+            paddingVertical: 4,
+          }}
+        />
+      </View>
+
       <TouchableOpacity
         onPress={handleSave}
         disabled={!isValid}
@@ -243,7 +298,7 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
           paddingVertical: 12,
           borderRadius: 8,
           alignItems: "center",
-          marginTop: 24
+          marginTop: 24,
         }}
       >
         <Text style={{ color: "#fff", fontWeight: "600" }}>Salvar</Text>

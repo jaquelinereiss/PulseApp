@@ -19,7 +19,7 @@ export function ReminderCard({ reminder, onPress, onToggle, onDelete }: Props) {
     if (reminder.repeatType === "interval")
       return `A cada ${reminder.interval}h`;
 
-    return '';
+    return "";
   }
 
   return (
@@ -73,16 +73,41 @@ export function ReminderCard({ reminder, onPress, onToggle, onDelete }: Props) {
               alignItems: "center",
             }}
           >
-            <View style={{ marginTop: 8}}> 
+            <View style={{ marginTop: 8 }}>
               <Text style={{ color: currentTheme.primary, fontWeight: "500" }}>
-              Data: {new Date(reminder.date).toLocaleDateString()}
-            </Text>
+                Data: {new Date(reminder.date).toLocaleDateString()}
+              </Text>
 
-            <Text style={{ color: currentTheme.primary, fontWeight: "500" }}>
-              Horário: {reminder.time}
-            </Text>
+              <Text style={{ color: currentTheme.primary, fontWeight: "500" }}>
+                Horário: {reminder.time}
+              </Text>
+
+              {reminder.tags && reminder.tags.length > 0 && (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    marginTop: 4,
+                  }}
+                >
+                  {reminder.tags.map((tag, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        paddingHorizontal: 8,
+                        paddingVertical: 2,
+                        borderRadius: 12,
+                        backgroundColor: currentTheme.border,
+                        marginRight: 4,
+                        marginBottom: 4,
+                      }}
+                    >
+                      <Text style={{ color: "#fff", fontSize: 12 }}>{tag}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
             </View>
-            
 
             <View
               style={{

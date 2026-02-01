@@ -9,4 +9,5 @@ export type Reminder = {
     interval?: number;
     repeatType: RepeatType;
     enabled: boolean;
+    tags?: string[];
 }
