@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Text, TouchableOpacity, Switch } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Reminder } from "../types/Reminder";
@@ -10,17 +11,22 @@ type Props = {
   onDelete: () => void;
 };
 
+function getRepeatLabel(reminder: Reminder) {
+  switch (reminder.repeatType) {
+    case "once":
+      return "Não repetir";
+    case "daily":
+      return "Diária";
+    case "interval":
+      return reminder.interval ? `A cada ${reminder.interval}h` : "Não repetir";
+    default:
+      return "Não repetir";
+  }
+}
+
 export function ReminderCard({ reminder, onPress, onToggle, onDelete }: Props) {
   const { currentTheme } = useTheme();
-
-  function getRepeatLabel() {
-    if (reminder.repeatType === "once") return "Não repetir";
-    if (reminder.repeatType === "daily") return "Diária";
-    if (reminder.repeatType === "interval")
-      return `A cada ${reminder.interval}h`;
-
-    return "";
-  }
+  const tags = reminder.tags ?? [];
 
   return (
     <TouchableOpacity
@@ -33,71 +39,43 @@ export function ReminderCard({ reminder, onPress, onToggle, onDelete }: Props) {
         opacity: reminder.enabled ? 1 : 0.5,
       }}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "flex-start",
-        }}
-      >
+      <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
         <Switch
           value={reminder.enabled}
           onValueChange={onToggle}
-          style={{
-            marginRight: 12,
-          }}
+          style={{ marginRight: 12 }}
           thumbColor={reminder.enabled ? currentTheme.primary : "#ccc"}
         />
 
         <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              color: currentTheme.text,
-              fontSize: 16,
-              fontWeight: "600",
-              flex: 1,
-            }}
-          >
+          <Text style={{ color: currentTheme.text, fontSize: 16, fontWeight: "600" }}>
             {reminder.title}
           </Text>
-
-          {reminder.description ? (
+          {reminder.description && (
             <Text style={{ color: currentTheme.subtext, marginTop: 4 }}>
               {reminder.description}
             </Text>
-          ) : null}
+          )}
 
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <View style={{ marginTop: 8 }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
+            <View>
               <Text style={{ color: currentTheme.primary, fontWeight: "500" }}>
-                Data: {new Date(reminder.date).toLocaleDateString()}
+                Data: {new Date(reminder.trigger_at).toLocaleDateString()}
+              </Text>
+              <Text style={{ color: currentTheme.primary, fontWeight: "500" }}>
+                Horário: {new Date(reminder.trigger_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </Text>
 
-              <Text style={{ color: currentTheme.primary, fontWeight: "500" }}>
-                Horário: {reminder.time}
-              </Text>
-
-              {reminder.tags && reminder.tags.length > 0 && (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    marginTop: 4,
-                  }}
-                >
-                  {reminder.tags.map((tag, index) => (
+              {tags.length > 0 && (
+                <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 4 }}>
+                  {tags.map((tag, idx) => (
                     <View
-                      key={index}
+                      key={idx}
                       style={{
                         paddingHorizontal: 8,
                         paddingVertical: 2,
                         borderRadius: 12,
-                        backgroundColor: currentTheme.border,
+                        backgroundColor: currentTheme.primary,
                         marginRight: 4,
                         marginBottom: 4,
                       }}
@@ -109,34 +87,21 @@ export function ReminderCard({ reminder, onPress, onToggle, onDelete }: Props) {
               )}
             </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 8,
-              }}
-            >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Ionicons
                 name="repeat"
                 size={14}
                 color={currentTheme.subtext}
                 style={{ marginRight: 4 }}
               />
-
               <Text style={{ color: currentTheme.subtext, fontSize: 13 }}>
-                {getRepeatLabel()}
+                {getRepeatLabel(reminder)}
               </Text>
             </View>
           </View>
         </View>
 
-        <TouchableOpacity
-          onPress={onDelete}
-          style={{
-            marginLeft: 12,
-            paddingTop: 2,
-          }}
-        >
+        <TouchableOpacity onPress={onDelete} style={{ marginLeft: 12, paddingTop: 2 }}>
           <Ionicons name="trash" size={24} color={currentTheme.subtext} />
         </TouchableOpacity>
       </View>
