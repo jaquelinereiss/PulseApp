@@ -10,6 +10,29 @@ export type LoginResponse = {
   };
 };
 
+export async function registerDevice(
+  deviceToken: string,
+  userToken: string
+) {
+
+  const response = await fetch(`${API_URL}/devices`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userToken}`
+    },
+    body: JSON.stringify({
+      device_token: deviceToken
+    })
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || "Erro ao registrar dispositivo");
+  }
+
+}
+
 export async function login(email: string, password: string): Promise<string> {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",

@@ -10,6 +10,8 @@ import { Header } from "../components/Header";
 import { ReminderModal } from "../components/ReminderModal";
 import { ReminderCard } from "../components/ReminderCard";
 import { Reminder, RepeatType, ReminderFormData } from "../types/Reminder";
+import { getDeviceToken } from "../services/pushService";
+import { registerDevice } from "../services/reminderApi";
 
 function normalizeReminder(r: any, fallbackTags?: string[]): Reminder {
   const triggerDate = new Date(r.trigger_at);
@@ -55,6 +57,30 @@ export function Main() {
   useEffect(() => {
     if (!loading && !userToken) navigation.navigate("Login" as never);
   }, [userToken, loading]);
+
+  useEffect(() => {
+
+  async function setupPush() {
+
+  if (!userToken) return;
+
+  try {
+
+    const deviceToken = await getDeviceToken();
+
+    if (!deviceToken) return;
+
+    await registerDevice(deviceToken, userToken);
+
+  } catch (error) {
+    console.log("Erro ao registrar device:", error);
+  }
+
+}
+
+  setupPush();
+
+}, [userToken]);
 
   useEffect(() => {
     if (!userToken) return;
