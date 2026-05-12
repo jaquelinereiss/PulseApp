@@ -1,5 +1,5 @@
 import { Reminder } from "../types/Reminder";
-import { API_URL } from "../../config";
+import { API_URL } from "../config/api";
 
 export type LoginResponse = {
   access_token: string;
@@ -34,7 +34,10 @@ export async function registerDevice(
 }
 
 export async function login(email: string, password: string): Promise<string> {
-  const response = await fetch(`${API_URL}/auth/login`, {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+  try{
+    const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -44,6 +47,14 @@ export async function login(email: string, password: string): Promise<string> {
   if (!response.ok) throw new Error(data.error || "Falha ao logar");
 
   return data.access_token;
+  } finally{
+    clearTimeout(timeout);
+  }
+  
+
+  
+
+  
 }
 
 async function request(path: string, token: string, options: RequestInit = {}) {

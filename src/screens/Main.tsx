@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity, TextInput, Alert, TextStyle } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
 import { getReminders, createReminder, updateReminder, toggleReminder, deleteReminder } from "../services/reminderApi";

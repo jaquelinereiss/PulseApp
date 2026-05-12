@@ -8,11 +8,14 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
+
 import { useTheme } from "../contexts/ThemeContext";
 import { login as apiLogin } from "../services/reminderApi";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getDeviceToken } from "../services/pushService";
+import { registerDevice } from "../services/reminderApi";
 
 export function LoginScreen() {
   const { currentTheme } = useTheme();
@@ -28,12 +31,23 @@ export function LoginScreen() {
       return Alert.alert("Erro", "Preencha email e senha");
 
     setLoading(true);
+
     try {
       const token = await apiLogin(email, password);
+
+      // salva auth
       await AsyncStorage.setItem("@pulseapp:token", token);
       await signIn(token);
 
+      // firebase push token
+      const fcmToken = await getDeviceToken();
+
+      if (fcmToken) {
+        await registerDevice(fcmToken, token);
+      }
+
       navigation.navigate("Main");
+
     } catch (err: any) {
       Alert.alert("Erro", err.message || "Falha ao logar");
     } finally {
@@ -43,7 +57,9 @@ export function LoginScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: currentTheme.background }]}>
-      <Text style={[styles.title, { color: currentTheme.text }]}>Login</Text>
+      <Text style={[styles.title, { color: currentTheme.text }]}>
+        Login
+      </Text>
 
       <TextInput
         placeholder="Email"

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Switch } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { Reminder } from "../types/Reminder";
 import { useTheme } from "../contexts/ThemeContext";
 

@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTheme } from "../contexts/ThemeContext";
 
 export function Header() {
