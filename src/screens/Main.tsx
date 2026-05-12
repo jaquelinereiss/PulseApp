@@ -75,7 +75,6 @@ export function Main() {
   } catch (error) {
     console.log("Erro ao registrar device:", error);
   }
-
 }
 
   setupPush();
@@ -100,7 +99,6 @@ export function Main() {
     fetchReminders();
   }, [userToken]);
 
-  /** CRIAR OU ATUALIZAR LEMBRETE*/
   const handleSaveReminder = useCallback(
   async (data: ReminderFormData) => {
     if (!userToken) return;
@@ -262,7 +260,6 @@ export function Main() {
         </Text>
       )}
 
-      {/* Barra de busca e filtros */}
       <View
         style={{
           flexDirection: "row",

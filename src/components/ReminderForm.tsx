@@ -168,7 +168,6 @@ export function ReminderForm({ reminder, onSave, onClose }: Props) {
         <DateTimePicker value={date} mode="date" display="calendar" onChange={handleDateChange} />
       )}
 
-      {/* Tags */}
       <View style={{ marginTop: 12 }}>
         <Text style={{ color: currentTheme.subtext, marginBottom: 8 }}>Tags</Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>

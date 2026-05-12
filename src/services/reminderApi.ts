@@ -50,11 +50,6 @@ export async function login(email: string, password: string): Promise<string> {
   } finally{
     clearTimeout(timeout);
   }
-  
-
-  
-
-  
 }
 
 async function request(path: string, token: string, options: RequestInit = {}) {

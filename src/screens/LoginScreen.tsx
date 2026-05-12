@@ -35,11 +35,9 @@ export function LoginScreen() {
     try {
       const token = await apiLogin(email, password);
 
-      // salva auth
       await AsyncStorage.setItem("@pulseapp:token", token);
       await signIn(token);
 
-      // firebase push token
       const fcmToken = await getDeviceToken();
 
       if (fcmToken) {
