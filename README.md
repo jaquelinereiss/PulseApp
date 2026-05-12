@@ -1,97 +1,79 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 💓 PulseApp
 
-# Getting Started
+PulseApp é um aplicativo mobile fullstack para **gerenciamento de lembretes pessoais**.  
+Ele oferece uma experiência fluida com criação, edição, ativação/desativação e exclusão de lembretes, com filtros avançados por data, tags e repetição, além de alternância de temas claro e escuro.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
-## Step 1: Start Metro
+## ⚙️ Tecnologias Utilizadas
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### 💠 **Frontend (Aplicativo Mobile)**
+- **React Native**: responsável pela interface, telas, navegação e experiência mobile.
+- **TypeScript**: tipagem estática para maior segurança e previsibilidade.
+- **React Hooks & Context API**: controle de estado global para autenticação e tema.
+- **Componentização de UI**: modais, formulários, cards, botões e header totalmente reutilizáveis.
+- **AsyncStorage**: persistência de token JWT no dispositivo.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 💠 **Backend e Serviços**
+- **ReminderApi (Node.js + Express)**
 
-```sh
-# Using npm
-npm start
+  API própria consumida pelo app para CRUD de lembretes, autenticação e ativação/desativação.
+    - Endpoints principais:
+    - `POST /auth/login` – login do usuário.
+    - `GET /reminders` – lista lembretes.
+    - `POST /reminders` – cria lembrete.
+    - `PUT /reminders/:id` – atualiza lembrete.
+    - `PATCH /reminders/:id/active` – ativa/desativa lembrete.
+    - `DELETE /reminders/:id` – exclui lembrete.
+- **Banco de Dados**
+  - Supabase - usado para armazenar usuários e lembretes.
 
-# OR using Yarn
-yarn start
-```
+### 💠 **Comunicação e Manipulação de Dados**
+- **Fetch / API Requests**  
+  Utilizados para:  
+  - consumir ReminderApi  
+  - enviar e receber dados de lembretes  
+  - autenticar usuários via token JWT
+ 
+🔹 Confira no repositório: **[ReminderApi](https://github.com/jaquelinereiss/ReminderApi)**
 
-## Step 2: Build and run your app
+## 💡 Funcionalidades Atuais
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+- 📝 **CRUD completo de lembretes**  
+  Título, descrição, data, horário, repetição (diária, não repetir ou intervalo em horas) e tags.
 
-### Android
+- 🔎 **Filtros avançados e busca**  
+  Por título, tag, estado (ativado/desativado), data e tipo de repetição.
 
-```sh
-# Using npm
-npm run android
+- 🌗 **Tema claro e escuro**  
+  Alternável via botão no header.
 
-# OR using Yarn
-yarn android
-```
+- 🛠 **Modais de criação e edição**  
+  Formulários reutilizáveis para criar ou atualizar lembretes.
 
-### iOS
+- 📅 **Data e hora com DateTimePicker**  
+  Seleção intuitiva de data e horário para lembretes.
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+- 🏷 **Tags dinâmicas**  
+  Adicionar, remover e filtrar lembretes por tags.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
 
-```sh
-bundle install
-```
+## 🧩 Arquitetura e Componentização
 
-Then, and every time you update your native dependencies, run:
+A arquitetura do PulseApp é modular e escalável:
 
-```sh
-bundle exec pod install
-```
+- **Componentes reutilizáveis:** Header, Cards, Modais e Formulários.
+- **Contextos globais:** ThemeContext e AuthContext.
+- **Serviços separados:** reminderApi para requisições ao backend.
+- **Navegação organizada** com React Navigation.
+- **Código limpo e fácil de manter**, seguindo boas práticas de React Native e TypeScript.
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
 
-```sh
-# Using npm
-npm run ios
+## 🚀 Melhorias Futuras
 
-# OR using Yarn
-yarn ios
-```
+- Notificações push para lembretes.
+- Perfil de usuário e gerenciamento de conta.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 👩‍💻 Autora
 
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Desenvolvido por **[Jaqueline Reis](https://github.com/jaquelinereiss)** – desenvolvedora fullstack responsável pela concepção do produto, desenvolvimento do app mobile em React Native, construção da ReminderApi em Node.js/Express, integração com banco de dados, autenticação via JWT, definição da arquitetura e aplicação de boas práticas de código.
