@@ -44,9 +44,7 @@ export function Main() {
 
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(
-    null,
-  );
+  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterEnabled, setFilterEnabled] = useState<null | boolean>(null);
   const [filterRepeat, setFilterRepeat] = useState<null | RepeatType>(null);
@@ -317,7 +315,6 @@ export function Main() {
         )}
       </View>
 
-      {/* Filtros e tags */}
       <View
         style={{
           flexDirection: "row",

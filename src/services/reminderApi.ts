@@ -30,12 +30,13 @@ export async function registerDevice(
     const data = await response.json().catch(() => ({}));
     throw new Error(data.error || "Erro ao registrar dispositivo");
   }
-
 }
 
 export async function login(email: string, password: string): Promise<string> {
+
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  
   try{
     const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",

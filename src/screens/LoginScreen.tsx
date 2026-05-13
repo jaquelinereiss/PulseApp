@@ -1,26 +1,13 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-  StyleSheet,
-} from "react-native";
-
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, StyleSheet } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { login as apiLogin } from "../services/reminderApi";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getDeviceToken } from "../services/pushService";
-import { registerDevice } from "../services/reminderApi";
 
 export function LoginScreen() {
   const { currentTheme } = useTheme();
   const { signIn } = useAuth();
-  const navigation = useNavigation<any>();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,14 +24,6 @@ export function LoginScreen() {
 
       await AsyncStorage.setItem("@pulseapp:token", token);
       await signIn(token);
-
-      const fcmToken = await getDeviceToken();
-
-      if (fcmToken) {
-        await registerDevice(fcmToken, token);
-      }
-
-      navigation.navigate("Main");
 
     } catch (err: any) {
       Alert.alert("Erro", err.message || "Falha ao logar");
@@ -100,7 +79,11 @@ export function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", paddingHorizontal: 24 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24
+  },
   title: {
     fontSize: 28,
     fontWeight: "700",
@@ -121,5 +104,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 8,
   },
-  buttonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16
+  },
 });

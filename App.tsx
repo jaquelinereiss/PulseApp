@@ -5,7 +5,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Main } from "./src/screens/Main";
 import { LoginScreen } from "./src/screens/LoginScreen";
 import { View, ActivityIndicator } from "react-native";
+import messaging from "@react-native-firebase/messaging";
 
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log("Mensagem em background:", remoteMessage);
+});
 const Stack = createNativeStackNavigator();
 
 function Routes() {

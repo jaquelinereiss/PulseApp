@@ -77,8 +77,12 @@ yarn-error.log
 # local env files
 .env*.local
 
+#
 node_modules/
 android/.gradle/
 android/build/
 android/app/build/
 ios/build/
+
+#
+android/app/google-services.json
